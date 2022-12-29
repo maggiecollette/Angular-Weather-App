@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {WeatherAPIService} from "../weather-api.service";
+import {Subscription, tap} from "rxjs";
 
 @Component({
   selector: 'app-current-weather',
@@ -9,7 +10,8 @@ import {WeatherAPIService} from "../weather-api.service";
 })
 export class CurrentWeatherComponent {
   public weatherSearchForm: FormGroup;
-  public weatherData: any;
+  public forecastData: any;
+  private weather$: Subscription;
   constructor(
     private formBuilder: FormBuilder,
     private weatherService: WeatherAPIService
@@ -21,9 +23,13 @@ export class CurrentWeatherComponent {
     });
   }
 
-  sendToAPI(formValues: { location: string; }) {
-    this.weatherService
-      .getWeather(formValues.location)
-      .subscribe(data => this.weatherData = data);
+  sendToForecastAPI(formValues: { location: string; }) {
+    this.weather$ = this.weatherService
+      .getForecast(formValues.location)
+      .pipe(tap((data) => {
+        this.forecastData = data
+        console.log(data);
+      }))
+      .subscribe();
   }
 }
