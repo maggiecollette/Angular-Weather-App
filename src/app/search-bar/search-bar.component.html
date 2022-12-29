@@ -1,0 +1,21 @@
+<div class="row align-items-top">
+  <form [formGroup]="weatherSearchForm"
+        (ngSubmit)="sendToCurrentAPI(weatherSearchForm.value); sendToForecastAPI(weatherSearchForm.value)">
+    <div class="row align-items-center form-group rounded">
+      <div class="col-11 justify-content-center">
+        <input
+          class="form-control rounded"
+          type="text"
+          id="location"
+          aria-describedby="location"
+          placeholder="Search for a Location"
+          formControlName="location"/>
+      </div>
+      <div class="col-1 justify-content-center">
+        <button type="submit" class="btn">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

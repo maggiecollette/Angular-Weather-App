@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {WeatherAPIService} from "../weather-api.service";
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-current-weather',
@@ -8,22 +6,7 @@ import {WeatherAPIService} from "../weather-api.service";
   styleUrls: ['./current-weather.component.css']
 })
 export class CurrentWeatherComponent {
-  public weatherSearchForm: FormGroup;
-  public weatherData: any;
-  constructor(
-    private formBuilder: FormBuilder,
-    private weatherService: WeatherAPIService
-) {}
+  @Input() currentData: any;
 
-  ngOnInit() {
-    this.weatherSearchForm = this.formBuilder.group({
-      location: ['']
-    });
-  }
-
-  sendToAPI(formValues: { location: string; }) {
-    this.weatherService
-      .getWeather(formValues.location)
-      .subscribe(data => this.weatherData = data);
-  }
+  constructor() {}
 }

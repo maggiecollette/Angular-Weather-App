@@ -1,41 +1,34 @@
-<body>
-<div class="container-fluid">
-  <div class="row align-items-top">
-      <form [formGroup]="weatherSearchForm" (ngSubmit)="sendToAPI(weatherSearchForm.value)">
-        <div class="row align-items-center form-group rounded">
-          <div class="col-11 justify-content-center">
-          <input
-            class="form-control rounded"
-            type="text"
-            id="location"
-            aria-describedby="location"
-            placeholder="Search for a Location"
-            formControlName="location"/>
-          </div>
-          <div class="col-1 justify-content-center">
-          <button type="submit" class="btn">
-            <i class="bi bi-search"></i>
-          </button>
-          </div>
-        </div>
-      </form>
-  </div>
-
+<div class="card shadow-sm bg-white rounded" *ngIf="!currentData">
+  <h5 class="card-title" id="current-location"> -- </h5>
+  <h6 class="card-subtitle" id="current-date-time"> -- </h6>
   <div class="row">
-    <div class="col-4">
-      <div class="card shadow-sm text-center bg-white rounded h-50">
-        <img alt="Something went wrong!"
-             src={{this.weatherData?.current.condition.icon}} />
-        <h5 class="card-text">
-          {{this.weatherData?.current.condition.text}}, {{this.weatherData?.current.temp_f}} °F
-        </h5>
-        <h6 class="card-text">
-          Feels like {{this.weatherData?.current.feelslike_f}} °F
-        </h6>
-      </div>
+    <div class="col">
+      <h4 id="current-temp"> -- </h4>
+      <h6 id="current-feels-like"> -- </h6>
+    </div>
+    <div class="col">
+      <h4 id="current-img"> -- </h4>
+      <h6 id="current-description"> -- </h6>
     </div>
   </div>
-
-
 </div>
-</body>
+
+<div class="card shadow-sm bg-white rounded" *ngIf="currentData">
+  <h5 class="card-title">{{ currentData?.location.name }}</h5>
+  <h6 class="card-subtitle"> {{ currentData?.location.localtime | date: 'fullDate' }} </h6>
+  <div class="row">
+    <div class="col">
+      <h4> {{currentData?.current.temp_f }} °F</h4>
+      <h6> Feels Like {{ currentData?.current.feelslike_f }} °F</h6>
+    </div>
+    <div class="col">
+      <img alt="Something went wrong!"
+           src={{this.currentData?.current.condition.icon}}>
+      <h6> {{this.currentData?.current.condition.text}} </h6>
+    </div>
+  </div>
+  <button type="submit" class="btn"
+          onclick="sendToForecastAPI(currentData?.location.name + currentData?.location.region)">
+    View Today's Hourly Forecast
+  </button>
+</div>

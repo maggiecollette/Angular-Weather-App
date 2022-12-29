@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import {CurrentWeatherComponent} from "./current-weather/current-weather.component";
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {WeatherPageComponent} from "./weather-page/weather-page.component";
 
 const routes: Routes = [
-  { path: '', component: CurrentWeatherComponent }
+  {path: '', component: WeatherPageComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
