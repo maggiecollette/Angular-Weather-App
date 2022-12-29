@@ -1,5 +1,8 @@
 <!-- Location Search Bar -->
 <div class="card shadow-sm rounded m-4">
+  <div class="card-header text-bg-dark">
+    Search Today's Weather
+  </div>
   <div class="row align-items-top">
     <form class="m-2" [formGroup]="weatherSearchForm" (ngSubmit)="sendToForecastAPI(weatherSearchForm.value)">
       <div class="row align-items-center form-group rounded">
@@ -28,13 +31,13 @@
       <div class="col">
         <h5 class="card-title ms-3 my-2"> -- </h5>
         <h6 class="card-subtitle ms-3 my-1"> -- </h6>
-        <div class="flex-row text-center ms-3 my-2">
-          <h6> -- </h6>
+        <div class="flex-row ms-3 my-2">
+          <h1> -- </h1>
           <h6> -- </h6>
         </div>
       </div>
-      <div class="col-2 text-start m-2">
-        <h1> -- </h1>
+      <div class="col-2 text-center me-5">
+        <h4> -- </h4>
         <h6> -- </h6>
       </div>
     </div>
@@ -58,14 +61,14 @@
       <div class="col">
         <h5 class="card-title ms-3 my-2">{{forecastData.location.name}}, {{forecastData.location.region}}, {{forecastData.location.country}}</h5>
         <h6 class="card-subtitle ms-3 my-1">{{forecastData.location.localtime | date: 'fullDate'}} </h6>
-        <div class="flex-row text-center ms-3 my-2">
-          <img alt="Something went wrong!" src={{this.forecastData.current.condition.icon}}>
-          <h6>{{forecastData.current.condition.text}} </h6>
+        <div class="flex-row ms-3 my-2">
+          <h1>{{forecastData.current.temp_f | number: '1.0-0'}}°F</h1>
+          <h6>{{forecastData.forecast.forecastday[0].day.maxtemp_f | number: '1.0-0'}}°F/{{forecastData.forecast.forecastday[0].day.mintemp_f | number: '1.0-0'}}°F</h6>
         </div>
       </div>
-      <div class="col-2 text-start m-2">
-        <h1>{{forecastData.current.temp_f | number: '1.0-0'}}°F</h1>
-        <h6>{{forecastData.forecast.forecastday[0].day.maxtemp_f | number: '1.0-0'}}°F/{{forecastData.forecast.forecastday[0].day.mintemp_f | number: '1.0-0'}}°F</h6>
+      <div class="col-2 text-center me-5">
+        <img alt="Something went wrong!" src={{this.forecastData.current.condition.icon}}>
+        <h6>{{forecastData.current.condition.text | titlecase}} </h6>
       </div>
     </div>
 
@@ -84,11 +87,11 @@
                && item.time_epoch < (forecastData.location.localtime_epoch + 21600)">
                   <div class="col-2">
                     <div class="card shadow-sm bg-white rounded text-center border-primary">
-                      <p class="card-title">{{item.time | date:'shortTime'}}</p>
+                      <h5 class="card-title mt-2">{{item.time | date:'shortTime'}}</h5>
                       <img alt="Something went wrong!" src={{item.condition.icon}}>
-                      <p class="badge text-bg-primary card-body m-1">{{item.chance_of_rain}}% <i
-                        class="bi bi-cloud-rain"></i></p>
-                      <p class="card-body">{{item.temp_f}}  °F</p>
+                      <p class="badge text-bg-primary card-body m-1">{{item.chance_of_rain}}%
+                        <i class="bi bi-cloud-rain"></i></p>
+                      <p class="card-body">{{item.temp_f | number: '1.0-0'}}°F</p>
                     </div>
                   </div>
                 </ng-container>
