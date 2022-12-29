@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {WeatherAPIService} from "../weather-api.service";
 import {Subscription, tap} from "rxjs";
@@ -8,7 +8,7 @@ import {Subscription, tap} from "rxjs";
   templateUrl: './current-weather.component.html',
   styleUrls: ['./current-weather.component.css']
 })
-export class CurrentWeatherComponent {
+export class CurrentWeatherComponent implements OnInit, OnDestroy {
   public weatherSearchForm: FormGroup;
   public forecastData: any;
   private weather$: Subscription;
@@ -21,6 +21,10 @@ export class CurrentWeatherComponent {
     this.weatherSearchForm = this.formBuilder.group({
       location: ['']
     });
+  }
+
+  ngOnDestroy() {
+    this.weather$.unsubscribe();
   }
 
   sendToForecastAPI(formValues: { location: string; }) {

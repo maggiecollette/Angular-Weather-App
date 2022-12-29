@@ -1,72 +1,102 @@
- <div class="card shadow-sm bg-white rounded m-4">
-    <div class="row align-items-top">
-      <form [formGroup]="weatherSearchForm" (ngSubmit)="sendToForecastAPI(weatherSearchForm.value)">
-        <div class="row align-items-center form-group rounded">
-          <div class="col-10">
-            <input
-              class="form-control rounded"
-              type="text"
-              id="location"
-              aria-describedby="location"
-              placeholder="Search for a Location"
-              formControlName="location"/>
-          </div>
-          <div class="col">
-            <button type="submit" class="btn">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
+<!-- Location Search Bar -->
+<div class="card shadow-sm rounded m-4">
+  <div class="row align-items-top">
+    <form class="m-2" [formGroup]="weatherSearchForm" (ngSubmit)="sendToForecastAPI(weatherSearchForm.value)">
+      <div class="row align-items-center form-group rounded">
+        <div class="col-10">
+          <input
+            class="form-control rounded"
+            type="text"
+            id="location"
+            aria-describedby="location"
+            placeholder="Search for a Location"
+            formControlName="location"/>
         </div>
-      </form>
-    </div>
-
-    <div *ngIf="!forecastData">
-      <div class="row">
-        <h5 class="card-title" id="current-location"> -- </h5>
-        <h6 class="card-subtitle" id="current-date-time"> -- </h6>
-        <div class="row">
-          <div class="col">
-            <h4 id="current-temp"> -- </h4>
-            <h6 id="current-feels-like"> -- </h6>
-          </div>
-          <div class="col">
-            <h4 id="current-img"> -- </h4>
-            <h6 id="current-description"> -- </h6>
-          </div>
+        <div class="col">
+          <button type="submit" class="btn">
+            <i class="bi bi-search"></i>
+          </button>
         </div>
       </div>
-
-      <div class="row">
-        <h6>forecast here</h6>
-      </div>
-    </div>
-
-    <div *ngIf="forecastData">
-      <div class="row">
-        <h5 class="card-title">{{ forecastData?.location.name }}</h5>
-        <h6 class="card-subtitle"> {{ forecastData?.location.localtime | date: 'fullDate' }} </h6>
-        <div class="row">
-          <div class="col">
-            <h4> {{forecastData?.current.temp_f }} °F</h4>
-            <h6> Feels Like {{ forecastData?.current.feelslike_f }} °F</h6>
-          </div>
-          <div class="col">
-            <img alt="Something went wrong!" src={{this.forecastData?.current.condition.icon}}>
-            <h6> {{forecastData?.current.condition.text}} </h6>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col" *ngFor="let item of forecastData.forecast.forecastday[0].hour">
-          <div class="card shadow-sm bg-white rounded">
-            <h6 class="card-title">{{ item.time }}</h6>
-            <img alt="Something went wrong!" src={{item.condition.icon}}>
-            <h6 class="card-body">{{ item.chance_of_rain }}% Precip</h6>
-            <h6 class="card-body">{{ item.temp_f }}  °F</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    </form>
   </div>
+
+  <!-- The empty state, if the user has not yet searched for a location -->
+  <div *ngIf="!forecastData">
+    <!-- The display of the empty state of the current weather -->
+    <div class="row align-items-center">
+      <div class="col">
+        <h5 class="card-title ms-3 my-2"> -- </h5>
+        <h6 class="card-subtitle ms-3 my-1"> -- </h6>
+        <div class="flex-row text-center ms-3 my-2">
+          <h6> -- </h6>
+          <h6> -- </h6>
+        </div>
+      </div>
+      <div class="col-2 text-start m-2">
+        <h1> -- </h1>
+        <h6> -- </h6>
+      </div>
+    </div>
+
+    <!-- The display of the empty state of the hourly forecast -->
+    <div class="accordion">
+      <div class="accordion-item">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#empty"
+                aria-expanded="false" aria-controls="empty">
+          --
+        </button>
+        <div id="empty" class="accordion-collapse collapse"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The state of the view if the user has searched a valid location -->
+  <div *ngIf="forecastData">
+    <!-- The filled state of the current weather -->
+    <div class="row align-items-center">
+      <div class="col">
+        <h5 class="card-title ms-3 my-2">{{forecastData.location.name}}, {{forecastData.location.region}}, {{forecastData.location.country}}</h5>
+        <h6 class="card-subtitle ms-3 my-1">{{forecastData.location.localtime | date: 'fullDate'}} </h6>
+        <div class="flex-row text-center ms-3 my-2">
+          <img alt="Something went wrong!" src={{this.forecastData.current.condition.icon}}>
+          <h6>{{forecastData.current.condition.text}} </h6>
+        </div>
+      </div>
+      <div class="col-2 text-start m-2">
+        <h1>{{forecastData.current.temp_f | number: '1.0-0'}}°F</h1>
+        <h6>{{forecastData.forecast.forecastday[0].day.maxtemp_f | number: '1.0-0'}}°F/{{forecastData.forecast.forecastday[0].day.mintemp_f | number: '1.0-0'}}°F</h6>
+      </div>
+    </div>
+
+    <!-- The filled state of the hourly forecast -->
+    <div class="accordion">
+      <div class="accordion-item">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="false" aria-controls="collapseOne">
+          Today's Hourly Forecast
+        </button>
+        <div id="collapseOne" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="row">
+              <ng-container *ngFor="let item of forecastData.forecast.forecastday[0].hour">
+                <ng-container *ngIf="item.time_epoch > forecastData.location.localtime_epoch
+               && item.time_epoch < (forecastData.location.localtime_epoch + 21600)">
+                  <div class="col-2">
+                    <div class="card shadow-sm bg-white rounded text-center border-primary">
+                      <p class="card-title">{{item.time | date:'shortTime'}}</p>
+                      <img alt="Something went wrong!" src={{item.condition.icon}}>
+                      <p class="badge text-bg-primary card-body m-1">{{item.chance_of_rain}}% <i
+                        class="bi bi-cloud-rain"></i></p>
+                      <p class="card-body">{{item.temp_f}}  °F</p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
